@@ -1,0 +1,14 @@
+{
+  "destinations": [
+    { "id": "dest-goa", "name": "Goa", "country": "India", "image": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1200&h=800&fit=crop", "rating": 4.7, "featured": true, "tags": ["beach", "nightlife", "family"] },
+    { "id": "dest-kerala", "name": "Kerala", "country": "India", "image": "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=1200&h=800&fit=crop", "rating": 4.8, "featured": true, "tags": ["backwaters", "nature", "wellness"] },
+    { "id": "dest-rajasthan", "name": "Rajasthan", "country": "India", "image": "https://images.unsplash.com/photo-1599661046827-dacde32f8d4f?w=1200&h=800&fit=crop", "rating": 4.6, "featured": true, "tags": ["heritage", "culture", "desert"] },
+    { "id": "dest-kashmir", "name": "Kashmir", "country": "India", "image": "https://images.unsplash.com/photo-1566837945700-30057527ade0?w=1200&h=800&fit=crop", "rating": 4.9, "featured": true, "tags": ["snow", "romance", "nature"] },
+    { "id": "dest-himachal", "name": "Himachal Pradesh", "country": "India", "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1200&h=800&fit=crop", "rating": 4.5, "featured": false, "tags": ["mountains", "trek", "hill-station"] },
+    { "id": "dest-ladakh", "name": "Ladakh", "country": "India", "image": "https://images.unsplash.com/photo-1591019479261-1a103585c559?w=1200&h=800&fit=crop", "rating": 4.8, "featured": true, "tags": ["adventure", "high-altitude", "monastery"] },
+    { "id": "dest-andaman", "name": "Andaman & Nicobar", "country": "India", "image": "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1200&h=800&fit=crop", "rating": 4.7, "featured": false, "tags": ["island", "beach", "scuba"] },
+    { "id": "dest-bangkok", "name": "Bangkok", "country": "Thailand", "image": "https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=1200&h=800&fit=crop", "rating": 4.6, "featured": true, "tags": ["city", "food", "shopping"] },
+    { "id": "dest-bali", "name": "Bali", "country": "Indonesia", "image": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&h=800&fit=crop", "rating": 4.8, "featured": true, "tags": ["beach", "wellness", "romance"] },
+    { "id": "dest-dubai", "name": "Dubai", "country": "UAE", "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&h=800&fit=crop", "rating": 4.7, "featured": true, "tags": ["luxury", "city", "shopping"] }
+  ]
+}

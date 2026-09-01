@@ -1,0 +1,21 @@
+// Country list with emoji flags for selectors and filter UIs.
+export const COUNTRIES = [
+  { code: 'IN', name: 'India', flag: '🇮🇳' },
+  { code: 'TH', name: 'Thailand', flag: '🇹🇭' },
+  { code: 'ID', name: 'Indonesia', flag: '🇮🇩' },
+  { code: 'AE', name: 'UAE', flag: '🇦🇪' },
+  { code: 'NP', name: 'Nepal', flag: '🇳🇵' },
+  { code: 'BT', name: 'Bhutan', flag: '🇧🇹' },
+  { code: 'LK', name: 'Sri Lanka', flag: '🇱🇰' },
+  { code: 'MV', name: 'Maldives', flag: '🇲🇻' },
+  { code: 'SG', name: 'Singapore', flag: '🇸🇬' },
+  { code: 'MY', name: 'Malaysia', flag: '🇲🇾' },
+  { code: 'JP', name: 'Japan', flag: '🇯🇵' },
+  { code: 'FR', name: 'France', flag: '🇫🇷' },
+  { code: 'IT', name: 'Italy', flag: '🇮🇹' },
+  { code: 'CH', name: 'Switzerland', flag: '🇨🇭' },
+  { code: 'US', name: 'USA', flag: '🇺🇸' },
+  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
+  { code: 'AU', name: 'Australia', flag: '🇦🇺' },
+  { code: 'NZ', name: 'New Zealand', flag: '🇳🇿' },
+];

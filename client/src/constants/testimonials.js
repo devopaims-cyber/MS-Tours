@@ -1,0 +1,51 @@
+// Testimonials for the Home page carousel.
+export const TESTIMONIALS = [
+  {
+    id: 't1',
+    name: 'Aanya Sharma',
+    location: 'Mumbai, IN',
+    avatar: 'https://i.pravatar.cc/120?img=47',
+    rating: 5,
+    text: 'MS Tours turned our anniversary into the trip of a lifetime. The Bali villa, the private dinners, the seamless transfers — every detail felt handpicked.',
+  },
+  {
+    id: 't2',
+    name: 'Rahul Verma',
+    location: 'Bengaluru, IN',
+    avatar: 'https://i.pravatar.cc/120?img=12',
+    rating: 5,
+    text: 'I was sceptical about an online travel agent, but the Ladakh package was genuinely wild — the drivers knew every shortcut and the camps were stunning.',
+  },
+  {
+    id: 't3',
+    name: 'Sara Khan',
+    location: 'Dubai, UAE',
+    avatar: 'https://i.pravatar.cc/120?img=45',
+    rating: 4,
+    text: 'Best price guarantee actually worked — I found a cheaper quote and they matched it AND threw in an airport transfer. Will book again.',
+  },
+  {
+    id: 't4',
+    name: 'Vikram Iyer',
+    location: 'Chennai, IN',
+    avatar: 'https://i.pravatar.cc/120?img=15',
+    rating: 5,
+    text: 'The Kerala houseboat package was unreal. Waking up on the backwaters with breakfast served on deck — that’s the MS Tours magic.',
+  },
+  {
+    id: 't5',
+    name: 'Priya Mehta',
+    location: 'Delhi, IN',
+    avatar: 'https://i.pravatar.cc/120?img=32',
+    rating: 5,
+    text: 'Their 24/7 support saved us when our flight got cancelled at midnight. We had a backup plan and a hotel within 30 minutes. Unreal service.',
+  },
+  {
+    id: 't6',
+    name: 'Arjun Reddy',
+    location: 'Hyderabad, IN',
+    avatar: 'https://i.pravatar.cc/120?img=33',
+    rating: 4,
+    text: 'Loved the retro UI on the site — booking felt like scrolling through a travel magazine from the 90s. Smooth checkout too.',
+  },
+];

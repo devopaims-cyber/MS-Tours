@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream text-navy font-inter antialiased;
+    font-feature-settings: 'ss01' on, 'cv11' on;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-fredoka;
+  }
+  ::selection {
+    @apply bg-brand-violet text-white;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .retro-border {
+    @apply border-2 border-navy;
+  }
+  .pill {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+  }
+}
+
+/* Leaflet z-index fix so it doesn't overflow navbar. */
+.leaflet-container {
+  z-index: 10;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { @apply bg-cream-200; }
+::-webkit-scrollbar-thumb { @apply bg-navy/30 rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-navy/50; }
