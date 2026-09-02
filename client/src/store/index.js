@@ -8,6 +8,7 @@ import hotelReducer from './slices/hotelSlice';
 import flightReducer from './slices/flightSlice';
 import bookingReducer from './slices/bookingSlice';
 import favoriteReducer from './slices/favoriteSlice';
+import travelportReducer from './slices/travelportSlice';
 import persistConfig from './persistConfig';
 
 const rootReducer = combineReducers({
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   flights: flightReducer,
   bookings: bookingReducer,
   favorites: favoriteReducer,
+  travelport: travelportReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

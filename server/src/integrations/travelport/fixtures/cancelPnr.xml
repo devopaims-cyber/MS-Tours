@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP:Envelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:unv="http://www.travelport.com/schema/universal_v47_0">
+  <SOAP:Body>
+    <unv:UniversalRecordCancelRsp>
+      <unv:UniversalRecord LocatorCode="6NKJ2K" Status="Cancelled" />
+    </unv:UniversalRecordCancelRsp>
+  </SOAP:Body>
+</SOAP:Envelope>

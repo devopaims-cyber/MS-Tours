@@ -51,6 +51,30 @@ const bookingSchema = new mongoose.Schema(
       index: true,
     },
     notes: { type: String, maxlength: 500 },
+
+    // --- Travelport / GDS ------------------------------------------
+    // 'ms-tours' bookings use the local Mongo refs above.
+    // 'travelport' bookings also carry a UniversalRecordLocatorCode (pnr)
+    // and the segments, since live offers are NOT stored as Flight docs.
+    provider: {
+      type: String,
+      enum: ['ms-tours', 'travelport'],
+      default: 'ms-tours',
+      index: true,
+    },
+    pnr: { type: String, uppercase: true, trim: true, sparse: true, index: true },
+    segments: [
+      {
+        airline: String,
+        flightNumber: String,
+        originCode: String,
+        destinationCode: String,
+        departure: Date,
+        arrival: Date,
+        stopCount: Number,
+      },
+    ],
+    providerMeta: { type: mongoose.Schema.Types.Mixed },
   },
   { timestamps: true }
 );

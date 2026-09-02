@@ -11,6 +11,7 @@ const navLinks = [
   { to: '/packages', label: 'Packages' },
   { to: '/hotels', label: 'Hotels' },
   { to: '/flights', label: 'Flights' },
+  { to: '/pnr', label: 'Check PNR' },
   { to: '/destinations', label: 'Destinations' },
   { to: '/about', label: 'About' },
 ];

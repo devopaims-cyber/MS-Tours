@@ -20,6 +20,7 @@ const Destinations = lazy(() => import('./pages/Destinations'));
 const Favorites = lazy(() => import('./pages/Favorites'));
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
+const PnrLookup = lazy(() => import('./pages/PnrLookup'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function ScrollToTop() {
@@ -74,6 +75,7 @@ export default function App() {
             <Route path="/destinations" element={<Destinations />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/pnr" element={<PnrLookup />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AnimatePresence>

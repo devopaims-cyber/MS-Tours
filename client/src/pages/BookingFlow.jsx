@@ -26,22 +26,27 @@ import { formatINR, formatDate, addDaysISO, todayISO } from '@/utils/formatters'
 import { useToast } from '@/hooks/useToast';
 import { nightsBetween } from '@/utils/formatters';
 import useAuth from '@/hooks/useAuth';
+import { createPnrThunk } from '@/store/slices/travelportSlice';
+import { useLocation } from 'react-router-dom';
 
 const STEPS = ['Trip Details', 'Travelers', 'Payment'];
 
 export default function BookingFlow() {
   const { type, id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = useToast();
   const { user } = useAuth();
   const { lastCreated, creating } = useSelector((s) => s.bookings);
+  const pnrState = useSelector((s) => s.travelport.pnr);
 
   const [step, setStep] = useState(1);
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [bookingRef, setBookingRef] = useState(null);
+  const [pnrLocator, setPnrLocator] = useState(null);
 
   // Form state
   const [form, setForm] = useState({
@@ -62,6 +67,8 @@ export default function BookingFlow() {
       package: () => getPackage(id).then((r) => r.data || r),
       hotel: () => getHotel(id).then((r) => r.data || r),
       flight: () => getFlight(id).then((r) => r.data || r),
+      // 'live' = Travelport offer passed via location.state from FlightSearch
+      live: () => Promise.resolve(location.state?.flight || null),
     }[type];
 
     if (!load) {
@@ -77,7 +84,7 @@ export default function BookingFlow() {
       .finally(() => active && setLoading(false));
 
     return () => { active = false; };
-  }, [type, id, navigate, toast]);
+  }, [type, id, navigate, toast, location.state]);
 
   // Pre-fill passenger details once item + user load
   useEffect(() => {
@@ -125,7 +132,7 @@ export default function BookingFlow() {
         }),
       ]};
     }
-    if (type === 'flight') {
+    if (type === 'flight' || type === 'live') {
       return { total: item.price * form.seats, breakdown: [
         { label: `${form.seats} × ${item.airline} ${item.flightNumber}`, amount: item.price * form.seats },
       ]};
@@ -138,24 +145,43 @@ export default function BookingFlow() {
   const goNext = () => setStep((s) => Math.min(STEPS.length, s + 1));
   const goBack = () => setStep((s) => Math.max(1, s - 1));
 
+  // Server expects the field names documented in server/src/controllers/booking.controller.js
+  // (the server is authoritative — it recomputes totalPrice and never trusts the client).
   const handleCreate = async () => {
+    // Live Travelport offer: skip our local Booking model, talk to TP.
+    if (type === 'live') {
+      const payload = {
+        offerId: item._id,
+        search: location.state?.lastSearch,
+        travelers: form.passengerDetails,
+        totalPrice: item.price * form.seats,
+      };
+      try {
+        const r = await dispatch(createPnrThunk(payload)).unwrap();
+        return r.booking || r;
+      } catch (e) {
+        toast.push({ kind: 'error', message: e.message || 'PNR creation failed' });
+        return null;
+      }
+    }
+
     const payload = {
       type,
       ...(type === 'package' && {
-        packageId: item._id,
-        checkInOrStartDate: form.date,
+        package: item._id,
+        startDate: form.date,
         travelers: form.passengerDetails,
       }),
       ...(type === 'hotel' && {
-        hotelId: item._id,
-        checkInOrStartDate: form.date,
-        checkOutDate: form.endDate,
+        hotel: item._id,
+        checkIn: form.date,
+        checkOut: form.endDate,
         rooms: form.rooms,
         travelers: form.passengerDetails,
       }),
       ...(type === 'flight' && {
-        flightId: item._id,
-        checkInOrStartDate: form.date,
+        flight: item._id,
+        date: form.date,
         seats: form.seats,
         travelers: form.passengerDetails,
         fareClass: form.fareClass,
@@ -177,6 +203,16 @@ export default function BookingFlow() {
     const booking = await handleCreate();
     if (!booking) { setPaymentLoading(false); return; }
 
+    if (type === 'live') {
+      // The PNR endpoint already marks the booking paid.
+      setBookingRef(booking.bookingRef);
+      setPnrLocator(booking.pnr);
+      toast.push({ kind: 'success', message: 'PNR created successfully!' });
+      setStep(4);
+      setPaymentLoading(false);
+      return;
+    }
+
     try {
       const res = await processPayment({ bookingId: booking._id, cardToken });
       const data = res.data || res;
@@ -197,6 +233,12 @@ export default function BookingFlow() {
           <FaCheckCircle className="text-7xl text-brand-green mx-auto mb-6" />
           <h1 className="font-fredoka text-4xl text-navy mb-3">You’re going places!</h1>
           <p className="text-navy/70 mb-2">Your booking is confirmed.</p>
+          {pnrLocator && (
+            <>
+              <p className="text-navy/60 text-sm mb-1">Travelport locator (GDS)</p>
+              <p className="font-fredoka text-3xl text-brand-orange mb-3 tracking-widest">{pnrLocator}</p>
+            </>
+          )}
           <p className="text-navy/60 text-sm mb-1">Reference</p>
           <p className="font-fredoka text-3xl text-brand-violet mb-8 tracking-widest">{bookingRef}</p>
           <div className="flex gap-3 justify-center">
@@ -314,6 +356,33 @@ export default function BookingFlow() {
                           onChange={(c) => setForm({ ...form, fareClass: c })}
                         />
                       </div>
+                    </>
+                  )}
+
+                  {type === 'live' && (
+                    <>
+                      <div className="p-4 rounded-2xl bg-brand-violet/10 border-2 border-navy/10">
+                        <div className="font-fredoka text-navy">{item.airline} {item.flightNumber}</div>
+                        <div className="text-navy/60 text-sm">
+                          {item.origin?.code} → {item.destination?.code} · {item.departureTime}–{item.arrivalTime}
+                        </div>
+                        <div className="text-navy/50 text-xs mt-1">via Travelport (live data)</div>
+                      </div>
+                      <Input
+                        label="Travel date"
+                        type="date"
+                        value={form.date}
+                        min={todayISO()}
+                        onChange={(e) => setForm({ ...form, date: e.target.value })}
+                      />
+                      <Input
+                        label="Seats"
+                        type="number"
+                        min={1}
+                        max={Math.min(9, item.seatsAvailable || 9)}
+                        value={form.seats}
+                        onChange={(e) => setForm({ ...form, seats: Number(e.target.value) })}
+                      />
                     </>
                   )}
 

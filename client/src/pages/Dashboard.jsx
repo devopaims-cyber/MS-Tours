@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import {
   FaSuitcase, FaPlane, FaBed, FaCalendarAlt, FaUser, FaHeart,
-  FaSignOutAlt, FaTrash
+  FaSignOutAlt, FaTrash, FaSatelliteDish
 } from 'react-icons/fa';
 
 import SectionHeading from '@/components/common/SectionHeading';
@@ -38,21 +38,33 @@ function BookingRow({ booking, onCancel }) {
     booking.package?.title || booking.hotel?.name ||
     (booking.flight ? `${booking.flight.airline} ${booking.flight.flightNumber}` : 'Booking');
 
+  const isGds = booking.provider === 'travelport' || Boolean(booking.pnr);
+  const segSummary = (booking.segments || [])
+    .map((s) => `${s.originCode || s.origin} → ${s.destinationCode || s.destination}`)
+    .join(' · ');
+
   return (
     <div className="p-4 rounded-2xl border-2 border-navy/10 bg-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
       <div className="flex items-start gap-3">
         <div className="w-12 h-12 rounded-2xl bg-brand-violet/15 text-brand-violet flex items-center justify-center text-xl border-2 border-navy/10">
-          {meta.icon}
+          {isGds ? <FaSatelliteDish /> : meta.icon}
         </div>
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge tone="violet">{meta.label}</Badge>
+            <Badge tone={isGds ? 'orange' : 'violet'}>
+              {isGds ? 'GDS' : meta.label}
+            </Badge>
             <Badge tone={booking.status === 'cancelled' ? 'rose' : 'green'}>
               {booking.status}
             </Badge>
+            {booking.pnr && (
+              <Badge tone="sky">PNR {booking.pnr}</Badge>
+            )}
             <span className="text-xs text-navy/50">#{booking.bookingRef}</span>
           </div>
-          <div className="font-fredoka text-navy mt-1">{title}</div>
+          <div className="font-fredoka text-navy mt-1">
+            {isGds && segSummary ? segSummary : title}
+          </div>
           <div className="text-xs text-navy/60">
             {formatDate(booking.checkInOrStartDate)}
             {booking.checkOutDate && ` → ${formatDate(booking.checkOutDate)}`}

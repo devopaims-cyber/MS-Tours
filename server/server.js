@@ -18,6 +18,7 @@ import bookingRoutes from './src/routes/booking.routes.js';
 import reviewRoutes from './src/routes/review.routes.js';
 import userRoutes from './src/routes/user.routes.js';
 import paymentRoutes from './src/routes/payment.routes.js';
+import travelportRoutes from './src/routes/travelport.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -68,6 +69,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/travelport', travelportRoutes);
 
 // 404 + error handlers
 app.use(notFound);

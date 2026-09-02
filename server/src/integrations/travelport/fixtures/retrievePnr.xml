@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP:Envelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:unv="http://www.travelport.com/schema/universal_v47_0"
+               xmlns:air="http://www.travelport.com/schema/air_v47_0"
+               xmlns:common="http://www.travelport.com/schema/common_v47_0">
+  <SOAP:Body>
+    <unv:UniversalRecordRetrieveRsp>
+      <unv:UniversalRecord LocatorCode="6NKJ2K" Status="Confirmed">
+        <unv:ProviderLocatorCode>6NKJ2K</unv:ProviderLocatorCode>
+        <common:BookingTraveler Key="bt1">
+          <common:BookingTravelerName First="Test" Last="Traveler" />
+        </common:BookingTraveler>
+        <unv:AirReservation>
+          <air:AirSegment Key="seg1" Group="0" Carrier="AI" FlightNumber="101"
+                          Origin="DEL" Destination="BOM"
+                          DepartureTime="2026-09-15T07:30:00.000+05:30"
+                          ArrivalTime="2026-09-15T09:35:00.000+05:30"
+                          FlightTime="125" Distance="1138" Equipment="788"
+                          CabinClass="Economy" FareBasis="YOW" />
+        </unv:AirReservation>
+      </unv:UniversalRecord>
+    </unv:UniversalRecordRetrieveRsp>
+  </SOAP:Body>
+</SOAP:Envelope>

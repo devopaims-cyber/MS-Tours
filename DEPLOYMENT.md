@@ -81,6 +81,19 @@ Use [MongoDB Atlas](https://www.mongodb.com/atlas) free tier (M0) — 512 MB is 
 
 Optional. The app logs a warning and continues if Redis is unreachable. For production caching, use [Upstash](https://upstash.com) free tier — the connection is plain `redis://default:<password>@<host>.upstash.io:6379`.
 
+## Travelport uAPI
+
+Same `.env` swap as for dev (see README → "Travelport uAPI integration"). In your host's secret manager, set:
+
+- `TRAVELPORT_MODE=live`
+- `TRAVELPORT_ENV=cert` (then `prod` once your account has a production PCC)
+- `TRAVELPORT_USERNAME`, `TRAVELPORT_PASSWORD`, `TRAVELPORT_APIKEY`
+- `TRAVELPORT_PCC`, `TRAVELPORT_TARGET_BRANCH`
+- `TRAVELPORT_AUTH=oauth` (or `wsse` if your account is on the legacy scheme)
+- `TRAVELPORT_TOKEN_URL` and `TRAVELPORT_ENDPOINT_URL` only if Travelport gave you non-default endpoints (otherwise the cert defaults baked into the integration are correct).
+
+After deploy, hit `GET /api/travelport/status` (or `/pnr` in the browser) to confirm the banner is gone. The Travelport SOAP calls are outbound-only — no inbound port to open.
+
 ## CORS
 
 `CLIENT_URL` must match the deployed client origin (no trailing slash). Multiple origins are not supported by the default config — extend `server.js` to allow an array if you need it.

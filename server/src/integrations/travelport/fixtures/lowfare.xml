@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP:Envelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:air="http://www.travelport.com/schema/air_v47_0"
+               xmlns:common="http://www.travelport.com/schema/common_v47_0">
+  <SOAP:Body>
+    <air:LowFareSearchRsp>
+      <air:AirPricingSolution Key="aps1" TotalPrice="4750.00" BasePrice="4500.00" Currency="INR">
+        <common:AirReservationLocatorCode>STUB01</common:AirReservationLocatorCode>
+        <air:AirSegment Key="seg1" Group="0" Carrier="AI" FlightNumber="101"
+                        Origin="DEL" Destination="BOM"
+                        DepartureTime="2026-09-15T07:30:00.000+05:30"
+                        ArrivalTime="2026-09-15T09:35:00.000+05:30"
+                        FlightTime="125" Distance="1138" Equipment="788"
+                        CabinClass="Economy" FareBasis="YOW">
+          <air:Origin>Delhi</air:Origin>
+          <air:Destination>Mumbai</air:Destination>
+        </air:AirSegment>
+        <air:PassengerType Code="ADT" />
+        <air:AirPricingInfo Key="api1" TotalPrice="4750.00" BasePrice="4500.00" Currency="INR">
+          <air:FareInfo Key="fi1" PassengerTypeCode="ADT" FareBasis="YOW" />
+        </air:AirPricingInfo>
+      </air:AirPricingSolution>
+      <air:AirPricingSolution Key="aps2" TotalPrice="5120.00" BasePrice="4900.00" Currency="INR">
+        <air:AirSegment Key="seg2" Group="0" Carrier="6E" FlightNumber="2451"
+                        Origin="DEL" Destination="BOM"
+                        DepartureTime="2026-09-15T11:15:00.000+05:30"
+                        ArrivalTime="2026-09-15T13:25:00.000+05:30"
+                        FlightTime="130" Distance="1138" Equipment="320"
+                        CabinClass="Economy" FareBasis="YO">
+          <air:Origin>Delhi</air:Origin>
+          <air:Destination>Mumbai</air:Destination>
+        </air:AirSegment>
+        <air:PassengerType Code="ADT" />
+      </air:AirPricingSolution>
+      <air:AirPricingSolution Key="aps3" TotalPrice="18500.00" BasePrice="18000.00" Currency="INR">
+        <air:AirSegment Key="seg3" Group="0" Carrier="AI" FlightNumber="665"
+                        Origin="DEL" Destination="BOM"
+                        DepartureTime="2026-09-15T17:00:00.000+05:30"
+                        ArrivalTime="2026-09-15T19:10:00.000+05:30"
+                        FlightTime="130" Distance="1138" Equipment="77W"
+                        CabinClass="Business" FareBasis="JOW">
+          <air:Origin>Delhi</air:Origin>
+          <air:Destination>Mumbai</air:Destination>
+        </air:AirSegment>
+        <air:PassengerType Code="ADT" />
+      </air:AirPricingSolution>
+    </air:LowFareSearchRsp>
+  </SOAP:Body>
+</SOAP:Envelope>

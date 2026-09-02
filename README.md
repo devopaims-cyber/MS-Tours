@@ -123,6 +123,7 @@ See `.env.example` for the full list. Critical ones:
 | `REDIS_URL`   | Optional. App runs without Redis (cache soft-fail) |
 | `CLIENT_URL`  | Used for CORS allow-list                           |
 | `VITE_API_URL`| Injected into client build for the axios base URL  |
+| `TRAVELPORT_*`| Travelport uAPI integration — see below           |
 
 ## Design system
 
@@ -146,6 +147,48 @@ The `/api/payments/process` endpoint is a **mock** — it sleeps ~800ms and flip
 ## Deployment
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md). The client is a static SPA; the server is a small Node process. MongoDB Atlas free tier works for the data layer.
+
+## Travelport uAPI integration
+
+The `/api/travelport/*` route group talks to Travelport Universal API (SOAP). All four operations are wired and stub-driven, so the flow works end-to-end with **zero credentials** today — when you fill in the env vars, the same code switches to live without any change to call sites.
+
+**Three modes** (`TRAVELPORT_MODE`):
+
+- `demo` (default) — `/flights` shows only the local catalog. Live toggle hides.
+- `stub` — "Live fares" toggle shows simulated offers from `server/src/integrations/travelport/fixtures/*.xml`, plus a yellow banner. Booking creates a real Mongo `Booking` with `provider:'travelport'` and a fixed PNR (`6NKJ2K`). The lookup page retrieves the same fixture. **Use this while developing without creds.**
+- `live` — Hits the real uAPI SOAP endpoints (`apicert.travelport.com` for cert, `apis.travelport.com` for prod). Requires credentials.
+
+**Two auth schemes** (`TRAVELPORT_AUTH`):
+
+- `oauth` (default) — `client_credentials` bearer token fetched from `TRAVELPORT_TOKEN_URL` (default cert OAuth URL is pre-filled).
+- `wsse` — legacy WS-Security `<UsernameToken>` in the SOAP header (built by `server/src/integrations/travelport/soap.js`).
+
+**To go live:**
+
+1. Sign up at https://developer.travelport.com (uAPI).
+2. From your account manager, get: PCC, Target Branch, username, password, API key.
+3. Fill the matching `TRAVELPORT_*` vars in `.env` (see `.env.example` for annotated block).
+4. Set `TRAVELPORT_MODE=live` and `TRAVELPORT_ENV=cert` (switch to `prod` when you have a production PCC).
+5. Restart the server. The yellow "Simulated live data" banner disappears, and `GET /api/travelport/status` returns `{ credsConfigured: true, mode: 'live' }`.
+
+**Stub fixture set** (sample locator `6NKJ2K`):
+
+- `lowfare.xml` — 3 offers DEL ⇄ BOM
+- `createPnr.xml` — booking confirmation
+- `retrievePnr.xml` — full itinerary with 1 segment
+- `cancelPnr.xml` — void confirmation
+
+**Route map:**
+
+| Method | Path                          | Auth     | Purpose                                    |
+|--------|-------------------------------|----------|--------------------------------------------|
+| GET    | `/api/travelport/status`      | public   | Tells the client which mode is active      |
+| POST   | `/api/travelport/search`      | public   | LowFareSearchReq → offers                  |
+| POST   | `/api/travelport/pnr`         | protect  | UniversalRecordCreateReq → booking + PNR   |
+| GET    | `/api/travelport/pnr/:locator`| protect  | UniversalRecordRetrieveReq → itinerary     |
+| DELETE | `/api/travelport/pnr/:locator`| protect  | UniversalRecordCancelReq → void + refund   |
+
+Search results are cached server-side in Redis for 180s, keyed by request hash. Live offers are not persisted — the seeded catalog stays authoritative for demo mode.
 
 ## License
 
