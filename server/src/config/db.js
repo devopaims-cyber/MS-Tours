@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 export async function connectDB() {
   const uri = process.env.MONGO_URI;
   if (!uri) {
-    console.error('✗ MONGO_URI is not set in environment');
+    console.error('✗ MONGO_URI is not set');
+    console.error('  Create a .env at the repo root (see .env.example) and restart,');
+    console.error('  or set MONGO_URI in your shell before `npm run dev`.');
     process.exit(1);
   }
   try {

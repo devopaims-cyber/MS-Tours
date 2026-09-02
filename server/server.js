@@ -1,4 +1,12 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// Load .env from the repo root, regardless of where `node` was invoked from.
+// (npm workspaces run scripts with the workspace as cwd, so a bare
+// `dotenv/config` import wouldn't find the root .env.)
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
