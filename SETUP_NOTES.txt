@@ -1,0 +1,147 @@
+================================================================
+MS Tours & Travels — Setup & Credentials Checklist
+================================================================
+Last updated: 2026-09-02
+Status: Site is RUNNING (Atlas + Vite + Travelport stub).
+
+Everything you need to fill in is in this one file: .env
+(Repo root, gitignored. Never committed.)
+
+================================================================
+A. ALREADY DONE — DO NOT TOUCH
+================================================================
+
+[X] MongoDB Atlas connected
+    - Cluster: m0.lgauizz.mongodb.net
+    - DB:     ms_tours
+    - User:   devopaims_db_user
+    - Seeded: 4 users, 10 destinations, 17 packages, 12 hotels,
+              18 flights, 12 reviews, 6 bookings
+
+[X] Travelport integration built in stub mode
+    - Live fares toggle works
+    - PNR create / retrieve / cancel work (fixture 6NKJ2K)
+    - Yellow "Simulated data" banner shows in stub mode
+    - No creds needed while in stub mode
+
+[X] Dev server runs cleanly
+    - Server:  http://localhost:5001
+    - Client:  http://localhost:5173
+    - Start:   npm run dev (from repo root)
+
+[X] Demo login credentials (seeded)
+    - demo@mstours.com   / Password123!
+    - priya@mstours.com  / Password123!
+    - rahul@mstours.com  / Password123!
+    - admin@mstours.com  / Admin@123
+
+================================================================
+B. OPTIONAL — ONLY WHEN YOU HAVE THESE
+================================================================
+
+------------------------------------------------------------
+B1. Travelport uAPI (to switch from stub → live)
+------------------------------------------------------------
+Where to get them:
+  1. Sign up at https://developer.travelport.com (uAPI program)
+  2. Account manager will email you:
+     - Username
+     - Password
+     - API key
+     - PCC (Pseudo City Code)
+     - Target Branch
+  3. Default endpoints are already in the integration layer
+     (cert = apicert.travelport.com, prod = apis.travelport.com)
+     Only fill the URLs below if Travelport gave you different ones.
+
+What to paste into .env (replace the empty TRAVELPORT_* lines):
+
+  TRAVELPORT_MODE=live          <- change from "stub"
+  TRAVELPORT_ENV=cert           <- change to "prod" when on a prod PCC
+  TRAVELPORT_AUTH=oauth         <- keep as-is (or "wsse" if legacy)
+  TRAVELPORT_USERNAME=          <- from Travelport
+  TRAVELPORT_PASSWORD=          <- from Travelport
+  TRAVELPORT_PCC=               <- from Travelport
+  TRAVELPORT_TARGET_BRANCH=     <- from Travelport
+  TRAVELPORT_APIKEY=            <- from Travelport
+  TRAVELPORT_TOKEN_URL=         <- leave blank unless Travelport gave you a custom one
+  TRAVELPORT_ENDPOINT_URL=      <- leave blank unless Travelport gave you a custom one
+
+How to verify it works:
+  1. Restart: pkill -9 -f nodemon && npm run dev
+  2. Hit http://localhost:5001/api/travelport/status
+     Should return: { "credsConfigured": true, "mode": "live" }
+  3. Open http://localhost:5173/flights, click "Live fares",
+     search DEL → BOM.
+     Yellow banner should be GONE.
+
+------------------------------------------------------------
+B2. Production secrets (when you deploy)
+------------------------------------------------------------
+These are in .env for now. Move them to your host's secret
+manager (Render env vars, Railway variables, etc.) before
+shipping to real users:
+
+  - JWT_SECRET         — change to a long random string
+                          (any 64+ char random string is fine;
+                          do NOT reuse the dev default)
+  - MONGO_URI          — your production Atlas connection string
+  - CLIENT_URL         — your deployed client origin
+                          (e.g. https://mstours.vercel.app)
+  - VITE_API_URL       — your deployed API origin + /api
+                          (set in client/.env, see example below)
+  - All TRAVELPORT_*   — production creds (from B1)
+
+Production client/.env example:
+
+  VITE_API_URL=https://api.your-domain.com/api
+
+================================================================
+C. IF SOMETHING BREAKS
+================================================================
+
+- Atlas connection refused  →  check IP whitelist in Atlas
+                                (Network Access → add 0.0.0.0/0
+                                 for dev, your IP for prod)
+- Port 5000 in use          →  that's macOS AirPlay Receiver
+                                (System Settings → AirDrop & Handoff
+                                 → turn off AirPlay Receiver), or
+                                change PORT=5001 to 5002 in .env
+                                and update client/.env VITE_API_URL
+- All API calls 403         →  check client/.env VITE_API_URL
+                                matches the server PORT
+- Login "Invalid credentials"  →  password is Password123!
+                                   (capital P, exclamation mark)
+- Server crash on boot      →  check .env exists at repo root
+                                (not just client/.env or server/.env)
+
+================================================================
+D. USEFUL COMMANDS
+================================================================
+
+  npm run dev              # start server (5001) + client (5173)
+  npm run seed             # drop + reseed Atlas (destructive)
+  npm run build            # production client build
+  node scripts/dry-boot.mjs   # verify route mounts without DB
+  node scripts/tp-smoke.mjs   # test Travelport stub pipeline
+
+  # Kill stray processes between runs:
+  pkill -9 -f "concurrently"
+  pkill -9 -f "nodemon"
+  pkill -9 -f "vite"
+  pkill -9 -f "node server.js"
+
+================================================================
+E. KEY URLS
+================================================================
+
+  Client (dev):          http://localhost:5173
+  Server (dev):          http://localhost:5001
+  Health check:          http://localhost:5001/api/health
+  Travelport status:     http://localhost:5001/api/travelport/status
+  Atlas console:         https://cloud.mongodb.com
+  Travelport dev portal: https://developer.travelport.com
+
+================================================================
+END
+================================================================
