@@ -15,7 +15,13 @@ export default defineConfig({
     open: false,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        // Read the API origin from env so the proxy matches whatever port
+        // the server is actually running on. VITE_API_URL looks like
+        // "http://localhost:5001/api" — strip the path before handing it
+        // to http-proxy.
+        target: process.env.VITE_API_URL
+          ? process.env.VITE_API_URL.replace(/\/api\/?$/, '')
+          : 'http://localhost:5001',
         changeOrigin: true,
         secure: false,
       },

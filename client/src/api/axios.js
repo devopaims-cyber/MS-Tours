@@ -1,9 +1,13 @@
-// Shared axios instance. Vite proxies /api → http://localhost:5000 in dev.
+// Shared axios instance. In dev, Vite's proxy forwards /api → API server
+// (port comes from VITE_API_URL, see vite.config.js). In prod, set
+// VITE_API_URL to the full API origin (e.g. https://api.example.com/api).
 
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_URL || '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
   withCredentials: false,
   timeout: 20000,
   headers: { 'Content-Type': 'application/json' },
